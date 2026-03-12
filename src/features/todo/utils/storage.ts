@@ -8,7 +8,7 @@ export function loadTodos() {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
     return saved.map((t: any) => ({
-      priority: t.priority ?? "medium", // migration
+      priority: t.priority ?? "medium", 
       ...t,
     }));
   } catch {

@@ -1,41 +1,59 @@
-"use client";
+"use client"
 
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store/store";
-import { toggleTodo, deleteTodo } from "../store/todoSlice";
-import { List, ListItem, Checkbox, IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useAppSelector } from "../store/hooks";
+import {
+  DndContext,
+  closestCenter
+} from "@dnd-kit/core";
+
+import {
+  SortableContext,
+  verticalListSortingStrategy
+} from "@dnd-kit/sortable";
+
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { reorderTodos } from "../store/todoSlice";
+import TodoItem from "./TodoItem";
 
 export default function TodoList() {
-  const todos = useSelector((state: RootState) => state.todo.todos);
-  const dispatch = useDispatch();
-const filter = useAppSelector((state) => state.todo.filter);
 
-const filteredTodos = todos.filter((t) => {
-  if (filter === "active") return !t.completed;
-  if (filter === "completed") return t.completed;
-  return true; // all
-});
+  const todos = useAppSelector(state => state.todo.todos);
+  const dispatch = useAppDispatch();
+
+  const handleDragEnd = (event: any) => {
+
+    const { active, over } = event;
+
+    if (!over) return;
+
+    if (active.id !== over.id) {
+
+      dispatch(
+        reorderTodos({
+          activeId: active.id,
+          overId: over.id
+        })
+      );
+
+    }
+  };
+
   return (
-    <List>
-      {todos.map((todo) => (
-        <ListItem
-          key={todo.id}
-          secondaryAction={
-            <IconButton onClick={() => dispatch(deleteTodo(todo.id))}>
-              <DeleteIcon />
-            </IconButton>
-          }
-        >
-          <Checkbox
-            checked={todo.completed}
-            onChange={() => dispatch(toggleTodo(todo.id))}
-          />
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
 
-          {todo.text}
-        </ListItem>
-      ))}
-    </List>
+      <SortableContext
+        items={todos.map(t => t.id)}
+        strategy={verticalListSortingStrategy}
+      >
+
+        {todos.map(todo => (
+          <TodoItem key={todo.id} todo={todo}/>
+        ))}
+
+      </SortableContext>
+
+    </DndContext>
   );
 }

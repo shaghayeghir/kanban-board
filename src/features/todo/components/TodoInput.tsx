@@ -7,6 +7,7 @@ import { addTodo, Priority } from "../store/todoSlice";
 
 export default function TodoInput() {
   const [text, setText] = useState("");
+  const [notes, setNotes] = useState("");
   const [priority, setPriority] = useState<Priority>("medium");
 
   const dispatch = useAppDispatch();
@@ -14,7 +15,7 @@ export default function TodoInput() {
   const handleAdd = () => {
     if (!text.trim()) return;
 
-    dispatch(addTodo({ text, priority }));
+    dispatch(addTodo({ text, priority, notes }));
 
     setText("");
     setPriority("medium");

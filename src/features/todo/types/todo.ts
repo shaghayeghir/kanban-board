@@ -6,4 +6,5 @@ export interface Todo {
   completed: boolean;
   createdAt: number;
   priority: Priority;
+  notes: string;
 }
