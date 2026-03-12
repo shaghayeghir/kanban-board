@@ -1,4 +1,4 @@
-import FilterTabs from "@/features/todo/components/FilterTabs";
+import FilterTabs from "@/features/todo/components/filterTabs/FilterTabs";
 import TodoInput from "@/features/todo/components/TodoInput";
 import TodoList from "@/features/todo/components/todoList/TodoList";
 import { Typography } from "@mui/material";
