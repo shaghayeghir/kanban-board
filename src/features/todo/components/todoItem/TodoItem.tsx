@@ -4,6 +4,7 @@ import { deleteTodo, toggleTodo } from "../../store/todoSlice";
 import { Todo } from "../../types/todo";
 import EditTaskModal from "../EditTaskModal";
 import { useTodoItems } from "./useTodoItem";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 export default function TodoItem({ todo }: { todo: Todo }) {
   const {
     setNodeRef,
@@ -19,8 +20,6 @@ export default function TodoItem({ todo }: { todo: Todo }) {
     <Box
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest("button")) return;
         setOpen(true);
@@ -36,13 +35,29 @@ export default function TodoItem({ todo }: { todo: Todo }) {
       }}
     >
       <EditTaskModal open={open} onClose={() => setOpen(false)} todo={todo} />
+
+      <Box
+        {...attributes}
+        {...listeners}
+        sx={{
+          cursor: "grab",
+          display: "flex",
+          alignItems: "center",
+          mr: 1,
+          color: "#999",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <DragIndicatorIcon fontSize="small" />
+      </Box>
+
       <Checkbox
         checked={todo.completed}
-        onChange={() => dispatch(toggleTodo(todo.id))}
         onClick={(e) => e.stopPropagation()}
+        onChange={() => dispatch(toggleTodo(todo.id))}
       />
 
-      {/* Priority Dot */}
+      {/* Priority */}
       <Box
         sx={{
           width: 10,
@@ -53,16 +68,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
         }}
       />
 
-      {/* متن تسک */}
-      <Typography
-        sx={{
-          flex: 1,
-          textDecoration: todo.completed ? "line-through" : "none",
-          color: todo.completed ? "#999" : "#333",
-        }}
-      >
-        {todo.text}
-      </Typography>
+      <Typography sx={{ flex: 1 }}>{todo.text}</Typography>
 
       <IconButton onClick={() => dispatch(deleteTodo(todo.id))}>
         <DeleteIcon />
