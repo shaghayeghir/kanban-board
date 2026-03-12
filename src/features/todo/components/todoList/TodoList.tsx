@@ -5,7 +5,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import TodoItem from "../TodoItem";
+import TodoItem from "../todoItem/TodoItem";
 import { useTodoList } from "./useTodoList";
 
 export default function TodoList() {

@@ -1,35 +1,20 @@
-import { Box, Checkbox, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useAppDispatch } from "../store/hooks";
-import { toggleTodo, deleteTodo } from "../store/todoSlice";
-import { Todo } from "../types/todo";
-import EditTaskModal from "./EditTaskModal";
-import { useState } from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { Box, Checkbox, IconButton, Typography } from "@mui/material";
+import { deleteTodo, toggleTodo } from "../../store/todoSlice";
+import { Todo } from "../../types/todo";
+import EditTaskModal from "../EditTaskModal";
+import { useTodoItems } from "./useTodoItem";
 export default function TodoItem({ todo }: { todo: Todo }) {
-  const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
-
-  const getPriorityColor = () => {
-    switch (todo.priority) {
-      case "high":
-        return "#ff6b6b"; // red
-      case "medium":
-        return "#ffa94d"; // orange
-      case "low":
-        return "#51cf66"; // green
-      default:
-        return "#ccc";
-    }
-  };
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: todo.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  const {
+    setNodeRef,
+    style,
+    attributes,
+    listeners,
+    setOpen,
+    open,
+    dispatch,
+    getPriorityColor,
+  } = useTodoItems({ todo });
   return (
     <Box
       ref={setNodeRef}
