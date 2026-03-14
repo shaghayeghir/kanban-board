@@ -1,6 +1,6 @@
 import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
 import { Todo } from "../types/todo";
-import { loadTodos } from "../utils/storage";
+import { loadTodos, saveTodos } from "../utils/storage";
 
 export type Filter = "all" | "active" | "completed";
 
@@ -9,11 +9,18 @@ interface TodoState {
   filter: Filter;
 }
 export type Priority = "low" | "medium" | "high";
-const initialState: TodoState = {
+
+export type Status = "todo" | "in-progress" | "done";
+export interface TodosState {
+  todos: Todo[];
+  filter: Filter;
+  columns: Status[]; // 👈 ترتیب ستون‌ها
+}
+const initialState: TodosState = {
   todos: loadTodos(),
   filter: "all",
+  columns: ["todo", "in-progress", "done"],
 };
-
 const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -29,6 +36,7 @@ const todoSlice = createSlice({
         priority: action.payload.priority,
         completed: false,
         createdAt: Date.now(),
+        status: "todo",
       });
     },
 
@@ -64,6 +72,16 @@ const todoSlice = createSlice({
       const item = state.todos.splice(oldIndex, 1)[0];
       state.todos.splice(newIndex, 0, item);
     },
+    setStatus(state, action: PayloadAction<{ id: string; status: Status }>) {
+      const t = state.todos.find((x) => x.id === action.payload.id);
+      if (t) {
+        t.status = action.payload.status;
+        saveTodos(state.todos);
+      }
+    },
+    reorderColumns(state, action: PayloadAction<Status[]>) {
+      state.columns = action.payload;
+    },
     setFilter: (state, action: PayloadAction<Filter>) => {
       state.filter = action.payload;
     },
@@ -85,5 +103,7 @@ export const {
   setPriority,
   updateTodo,
   reorderTodos,
+  setStatus,
+  reorderColumns
 } = todoSlice.actions;
 export default todoSlice.reducer;
