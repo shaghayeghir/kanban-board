@@ -1,17 +1,10 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { setFilter } from "@/features/todo/store/todoSlice";
 import { Button, ButtonGroup } from "@mui/material";
+import { useFilterTabs } from "./useFilterTabs";
 
 export default function FilterTabs() {
-  const dispatch = useAppDispatch();
-  const filter = useAppSelector((state) => state.todo.filter);
-
-  const handleFilter = (f: "all" | "active" | "completed") => {
-    dispatch(setFilter(f));
-  };
-
+  const { handleFilter, filter } = useFilterTabs();
   return (
     <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
       <Button

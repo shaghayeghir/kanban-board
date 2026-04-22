@@ -1,26 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { TextField, Button, Box, Select, MenuItem } from "@mui/material";
-import { useAppDispatch } from "../store/hooks";
-import { addTodo, Priority } from "../store/todoSlice";
+import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
+import { Priority } from "../../store/todoSlice";
+import { useTodoInputs } from "./useTodoInputs";
 
 export default function TodoInput() {
-  const [text, setText] = useState("");
-  const [notes, setNotes] = useState("");
-  const [priority, setPriority] = useState<Priority>("medium");
-
-  const dispatch = useAppDispatch();
-
-  const handleAdd = () => {
-    if (!text.trim()) return;
-
-    dispatch(addTodo({ text, priority, notes }));
-
-    setText("");
-    setPriority("medium");
-  };
-
+  const { priority, setPriority, text, setText, handleAdd } = useTodoInputs();
   return (
     <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
       {/* انتخاب Priority */}
